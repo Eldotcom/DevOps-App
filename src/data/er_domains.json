@@ -1,0 +1,37 @@
+[
+    {
+        "domain": "google.com",
+        "status": "Up",
+        "ssl_expiration": "2025-03-31"
+    },
+    {
+        "domain": "youtube.com",
+        "status": "Up",
+        "ssl_expiration": "2025-03-31"
+    },
+    {
+        "domain": "jnj.com",
+        "status": "Up",
+        "ssl_expiration": "Error"
+    },
+    {
+        "domain": "facebook.com",
+        "status": "Up",
+        "ssl_expiration": "2025-02-01"
+    },
+    {
+        "domain": "ynet.com",
+        "status": "Down",
+        "ssl_expiration": "Error"
+    },
+    {
+        "domain": "ynet.co.il",
+        "status": "Up",
+        "ssl_expiration": "2025-10-31"
+    },
+    {
+        "domain": "walla.co.il",
+        "status": "Up",
+        "ssl_expiration": "Error"
+    }
+]

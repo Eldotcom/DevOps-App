@@ -2,27 +2,12 @@
     {
         "domain": "google.com",
         "status": "Up",
-        "ssl_expiration": "2025-03-31"
-    },
-    {
-        "domain": "youtube.com",
-        "status": "Up",
-        "ssl_expiration": "2025-03-31"
-    },
-    {
-        "domain": "jnj.com",
-        "status": "Up",
-        "ssl_expiration": "Error"
+        "ssl_expiration": "2025-04-28"
     },
     {
         "domain": "facebook.com",
         "status": "Up",
-        "ssl_expiration": "2025-02-01"
-    },
-    {
-        "domain": "ynet.com",
-        "status": "Down",
-        "ssl_expiration": "Error"
+        "ssl_expiration": "2025-03-01"
     },
     {
         "domain": "ynet.co.il",

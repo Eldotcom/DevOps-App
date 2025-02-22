@@ -1,0 +1,20 @@
+[
+    {
+        "domain": "example.com",
+        "status": "Down",
+        "ssl_expiration": "N/A",
+        "ssl_issuer": "N/A"
+    },
+    {
+        "domain": "testdomain.org",
+        "status": "Up",
+        "ssl_expiration": "N/A",
+        "ssl_issuer": "N/A"
+    },
+    {
+        "domain": "mywebsite.net",
+        "status": "Up",
+        "ssl_expiration": "2025-08-12",
+        "ssl_issuer": "N/A"
+    }
+]

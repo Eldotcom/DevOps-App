@@ -20,17 +20,64 @@
             {% endfor %}
         </tbody>
     </table>
+    
 
     <h3>Add a New Domain</h3>
+        <!-- Inside dashboard.html, near the Add Domain link -->
     <form method="POST">
         <label for="domain">Domain:</label>
         <input type="text" id="domain" name="domain" required>
         <button type="submit">Add Domain</button>
-    </form>
+        <a href="{{ url_for('check_domains') }}">Add Single Domain</a> | 
+        <a href="{{ url_for('bulk_upload') }}">Bulk Upload</a>
+        <a href="{{ url_for('update_domains_route') }}">Update All Domains</a>
 
+    </form>
     <form method="GET" action="/check_domains">
         <button type="submit">Check All Domains</button>
     </form>
+
+    <button id="clearTableBtn" class="btn btn-danger">Clear Table</button>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Domain</th>
+                <th>Status</th>
+                <th>SSL Expiry</th>
+                <th>Last Checked</th>
+            </tr>
+        </thead>
+        <tbody id="domainsTableBody">
+            {% for domain in domains %}
+            <tr>
+                <td>{{ domain.domain }}</td>
+                <td>{{ domain.status }}</td>
+                <td>{{ domain.ssl_expiration }}</td>
+                <td>{{ domain.last_checked }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let clearButton = document.getElementById("clearTableBtn");
+            let tableBody = document.getElementById("domainsTableBody");
+    
+            if (clearButton && tableBody) {
+                clearButton.addEventListener("click", function() {
+                    console.log("Clear Table Button Clicked!"); // Debugging message
+                    tableBody.innerHTML = "";  // Clears all rows in the table
+                });
+            } else {
+                console.error("Button or table body not found!");
+            }
+        });
+    </script>
+
+
+
 
     {% with messages = get_flashed_messages() %}
         {% if messages %}

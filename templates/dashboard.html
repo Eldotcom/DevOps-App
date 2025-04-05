@@ -28,9 +28,10 @@
         <label for="domain">Domain:</label>
         <input type="text" id="domain" name="domain" required>
         <button type="submit">Add Domain</button>
-        <a href="{{ url_for('check_domains') }}">Add Single Domain</a> | 
-        <a href="{{ url_for('bulk_upload') }}">Bulk Upload</a>
-        <a href="{{ url_for('update_domains_route') }}">Update All Domains</a>
+        <a href="{{ url_for('monitoring.check_domains') }}">Add Single Domain</a> | 
+        <a href="{{ url_for('monitoring.bulk_upload') }}">Bulk Upload</a>
+        <a href="{{ url_for('monitoring.update_domains_route') }}">Update All Domains</a>
+
 
     </form>
 

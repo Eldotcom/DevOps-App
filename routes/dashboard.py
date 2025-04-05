@@ -31,13 +31,13 @@ def dashboard():
         domain = request.form.get("domain")
         if not domain:
             flash("Domain cannot be empty.")
-            return redirect(url_for("dashboard"))
+            return redirect(url_for("dashboard.dashboard"))
 
         with open(domains_file, "r+") as f:
             domains = json.load(f)
             if domain in [d["domain"] for d in domains]:
                 flash("Domain already exists.")
-                return redirect(url_for("dashboard"))
+                return redirect(url_for("dashboard.dashboard"))
 
             domains.append({
                 "domain": domain,
@@ -49,7 +49,7 @@ def dashboard():
             json.dump(domains, f, indent=4)
 
         flash(f"Domain '{domain}' added successfully.")
-        return redirect(url_for("dashboard"))
+        return redirect(url_for("dashboard.dashboard"))
 
     with open(domains_file, "r") as f:
         domains = json.load(f)

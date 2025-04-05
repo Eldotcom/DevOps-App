@@ -1,1 +1,7 @@
-[]
+[
+    {
+        "domain": "google.com",
+        "status": "Unknown",
+        "ssl_expiration": "Unknown"
+    }
+]

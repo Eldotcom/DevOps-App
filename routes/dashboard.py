@@ -15,11 +15,17 @@ def dashboard():
 
 
     username = session["username"]
-    domains_file = get_user_domains_file(username)
+    #domains_file = get_user_domains_file(username)
+    domains_file = os.path.join("data", f"{username}_domains.json")
 
+   # Make sure the data folder exists
+    os.makedirs(os.path.dirname(domains_file), exist_ok=True)
+
+    # Then ensure user-specific domain file exists
     if not os.path.exists(domains_file):
         with open(domains_file, "w") as f:
             json.dump([], f)
+
 
     if request.method == "POST":
         domain = request.form.get("domain")

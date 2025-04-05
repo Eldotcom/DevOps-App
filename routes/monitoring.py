@@ -1,12 +1,8 @@
 from flask import Blueprint, session, redirect, url_for, flash
 import json, os
-
 from services.domain_checker import check_liveness, check_ssl_expiration
 
 monitoring_bp = Blueprint('monitoring', __name__)
-
-def get_user_domains_file(username):
-    return os.path.join("data", f"{username}_domains.json")
 
 @monitoring_bp.route("/check_domains")
 def check_domains():
@@ -15,10 +11,11 @@ def check_domains():
         return redirect(url_for("auth.login"))
 
     username = session["username"]
-    domains_file = get_user_domains_file(username)
+    domains_file = os.path.join("data", f"{username}_domains.json")
+    os.makedirs(os.path.dirname(domains_file), exist_ok=True)
 
     if not os.path.exists(domains_file):
-        flash("No domain data found.")
+        flash("No domains to check.")
         return redirect(url_for("dashboard.dashboard"))
 
     with open(domains_file, "r+") as f:

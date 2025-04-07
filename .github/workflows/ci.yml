@@ -1,31 +1,54 @@
-name: Run Tests on Push
+name: CI - Run All Tests
 
 on:
   push:
-    branches:
-      - refactor/split-backend-frontend
+    branches: [ main, refactor/split-backend-frontend ]
   pull_request:
-    branches:
-      - refactor/split-backend-frontend
+    branches: [ main, refactor/split-backend-frontend ]
 
 jobs:
   test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install selenium webdriver-manager
 
-      - name: Run tests
-        run: |
-          pytest tests/
+    - name: Run Flask app in background
+      run: |
+        nohup python app.py > flask.log 2>&1 &
+
+    - name: Wait for Flask server to be ready
+      run: |
+        echo "Waiting for server..."
+        for i in {1..30}; do
+          nc -z 127.0.0.1 5000 && echo "Server is up!" && exit 0
+          echo "Waiting ($i)..."
+          sleep 1
+        done
+        echo "Server did not start in time" >&2
+        cat flask.log
+        exit 1
+
+
+    - name: Run API tests
+      run: |
+        pytest tests/test_auth.py
+
+    - name: Run UI tests (Selenium)
+      env:
+        HEADLESS: "true"
+        BROWSER: "chrome"
+      run: |
+        pytest tests/test_ui_login_generic.py

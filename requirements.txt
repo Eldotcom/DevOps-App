@@ -1,2 +1,7 @@
+flask
+requests
 pytest
+selenium
+webdriver-manager
+
 

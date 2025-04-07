@@ -4,9 +4,14 @@ from routes.auth import auth_bp
 from routes.monitoring import monitoring_bp
 import webbrowser
 import threading
+from flask import render_template
 
 app = Flask(__name__)
 app.secret_key = "dev_secret"
+
+@app.route("/")
+def index():
+    return render_template("index.html")
 
 # Register Blueprints
 app.register_blueprint(dashboard_bp)
@@ -21,4 +26,5 @@ if __name__ == "__main__":
     # מחכה שניה ופותח דפדפן
     threading.Timer(1, open_browser).start()
 
-    app.run(debug=True)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)

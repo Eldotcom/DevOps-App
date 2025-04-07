@@ -17,3 +17,4 @@ def test_register_and_login():
     })
     assert login_response.status_code == 200
     assert "dashboard" in login_response.text or "Welcome" in login_response.text
+    #

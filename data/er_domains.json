@@ -1,7 +1,26 @@
 [
     {
         "domain": "google.com",
-        "status": "Unknown",
-        "ssl_expiration": "Unknown"
+        "status": "Up",
+        "ssl_expiration": "2025-06-23",
+        "last_checked": "2025-04-26 15:08:54"
+    },
+    {
+        "domain": "ynet.co.il",
+        "status": "Up",
+        "ssl_expiration": "2025-10-31",
+        "last_checked": "2025-04-26 15:08:55"
+    },
+    {
+        "domain": "walla.co.il",
+        "status": "Up",
+        "ssl_expiration": "2025-05-30",
+        "last_checked": "2025-04-26 15:08:55"
+    },
+    {
+        "domain": "youtube.com",
+        "status": "Up",
+        "ssl_expiration": "2025-06-23",
+        "last_checked": "2025-04-26 15:08:56"
     }
 ]

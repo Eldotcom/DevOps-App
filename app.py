@@ -14,9 +14,9 @@ def index():
     return render_template("index.html")
 
 # Register Blueprints
+app.register_blueprint(auth_bp)
 app.register_blueprint(dashboard_bp)
 app.register_blueprint(monitoring_bp)
-app.register_blueprint(auth_bp)
 
 if __name__ == "__main__":
     # פותח את הדפדפן אחרי הפעלה

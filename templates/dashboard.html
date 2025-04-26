@@ -1,77 +1,80 @@
 {% extends "base.html" %}
 {% block content %}
     <h2>Dashboard</h2>
-    <h3>Your Domains</h3>
-    <table border="1" style="width: 100%; text-align: left;">
-        <thead>
-            <tr>
-                <th>Domain</th>
-                <th>Status</th>
-                <th>SSL Expiration</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for domain in domains %}
-                <tr>
-                    <td>{{ domain.domain }}</td>
-                    <td>{{ domain.status }}</td>
-                    <td>{{ domain.ssl_expiration }}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    
 
+    <!-- Action Buttons -->
+    <div style="margin-bottom: 20px;">
+        <a href="{{ url_for('monitoring.check_domains') }}" class="btn btn-outline-success" style="margin-right: 10px;">Check All Domains</a>
+        <a href="{{ url_for('monitoring.bulk_upload') }}" class="btn btn-outline-primary" style="margin-right: 10px;">Bulk Upload Domains</a>
+        <a href="{{ url_for('monitoring.update_domains_route') }}" class="btn btn-outline-warning" style="margin-right: 10px;">Update All Domains</a>
+    </div>
+
+    <!-- Add New Domain Form -->
     <h3>Add a New Domain</h3>
-        <!-- Inside dashboard.html, near the Add Domain link -->
-    <form method="POST">
-        <label for="domain">Domain:</label>
-        <input type="text" id="domain" name="domain" required>
-        <button type="submit">Add Domain</button>
-        <a href="{{ url_for('monitoring.check_domains') }}">Add Single Domain</a> | 
-        <a href="{{ url_for('monitoring.bulk_upload') }}">Bulk Upload</a>
-        <a href="{{ url_for('monitoring.update_domains_route') }}">Update All Domains</a>
-
-
+    <form method="POST" style="margin-bottom: 20px;">
+        <input type="text" id="domain" name="domain" required style="padding: 8px; width: 300px;">
+        <button type="submit" class="btn btn-primary">Add Domain</button>
     </form>
 
-    <form method="GET" action="/monitoring.check_domains">
-        <button type="submit">Check All Domains</button>
-    </form>
-    
-
-    <button id="clearTableBtn" class="btn btn-danger">Clear Table</button>
-
-    <table class="table table-striped">
+    <!-- Domains Table -->
+    <h3>Your Domains</h3>
+    <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
         <thead>
-            <tr>
-                <th>Domain</th>
-                <th>Status</th>
-                <th>SSL Expiry</th>
-                <th>Last Checked</th>
+            <tr style="background-color: #f2f2f2;">
+                <th style="border: 1px solid black; padding: 12px; text-align: center; font-size: 16px;">Domain</th>
+                <th style="border: 1px solid black; padding: 12px; text-align: center; font-size: 16px;">Status</th>
+                <th style="border: 1px solid black; padding: 12px; text-align: center; font-size: 16px;">SSL Expiration</th>
+                <th style="border: 1px solid black; padding: 12px; text-align: center; font-size: 16px;">Last Checked</th>
             </tr>
         </thead>
         <tbody id="domainsTableBody">
             {% for domain in domains %}
-            <tr>
-                <td>{{ domain.domain }}</td>
-                <td>{{ domain.status }}</td>
-                <td>{{ domain.ssl_expiration }}</td>
-                <td>{{ domain.last_checked }}</td>
+            <tr style="border: 1px solid black; text-align: center; font-size: 16px;">
+                <td style="border: 1px solid black; padding: 10px;">{{ domain.get('domain', '') }}</td>
+                <td style="border: 1px solid black; padding: 10px;
+                           color: {% if domain.get('status') == 'Up' %}green{% elif domain.get('status') == 'Down' %}red{% else %}gray{% endif %};
+                           font-weight: bold;">
+                    {{ domain.get('status', 'Unknown') }}
+                </td>
+                <td style="border: 1px solid black; padding: 10px;">{{ domain.get('ssl_expiration', 'Unknown') }}</td>
+                <td style="border: 1px solid black; padding: 10px;">{{ domain.get('last_checked', 'N/A') }}</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+
+    <!-- Clear Table Button -->
+    <div style="margin-top: 20px;">
+        <button id="clearTableBtn" class="btn btn-danger">Clear Table</button>
+    </div>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul style="margin-top: 20px;">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Extra Styling and Clear Table Script -->
+    <style>
+        table tbody tr:hover {
+            background-color: #e8e8e8;
+        }
+    </style>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             let clearButton = document.getElementById("clearTableBtn");
             let tableBody = document.getElementById("domainsTableBody");
-    
+
             if (clearButton && tableBody) {
                 clearButton.addEventListener("click", function() {
-                    console.log("Clear Table Button Clicked!"); // Debugging message
-                    tableBody.innerHTML = "";  // Clears all rows in the table
+                    console.log("Clear Table Button Clicked!");
+                    tableBody.innerHTML = "";
                 });
             } else {
                 console.error("Button or table body not found!");
@@ -79,16 +82,4 @@
         });
     </script>
 
-
-
-
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <ul>
-                {% for message in messages %}
-                    <li>{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-    {% endwith %}
 {% endblock %}

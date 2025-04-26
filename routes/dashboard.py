@@ -13,19 +13,16 @@ def dashboard():
         flash("Please log in first.")
         return redirect(url_for("auth.login"))
 
-
     username = session["username"]
-    #domains_file = get_user_domains_file(username)
-    domains_file = os.path.join("data", f"{username}_domains.json")
+    domains_file = get_user_domains_file(username)
 
-   # Make sure the data folder exists
+    # Ensure the data folder exists
     os.makedirs(os.path.dirname(domains_file), exist_ok=True)
 
-    # Then ensure user-specific domain file exists
+    # Ensure user-specific domain file exists
     if not os.path.exists(domains_file):
         with open(domains_file, "w") as f:
             json.dump([], f)
-
 
     if request.method == "POST":
         domain = request.form.get("domain")
@@ -33,25 +30,40 @@ def dashboard():
             flash("Domain cannot be empty.")
             return redirect(url_for("dashboard.dashboard"))
 
-        with open(domains_file, "r+") as f:
-            domains = json.load(f)
-            if domain in [d["domain"] for d in domains]:
-                flash("Domain already exists.")
-                return redirect(url_for("dashboard.dashboard"))
+        try:
+            with open(domains_file, "r+") as f:
+                domains = json.load(f)
+                if domain in [d["domain"] for d in domains]:
+                    flash("Domain already exists.")
+                    return redirect(url_for("dashboard.dashboard"))
 
-            domains.append({
-                "domain": domain,
-                "status": "Unknown",
-                "ssl_expiration": "Unknown"
-            })
+                domains.append({
+                    "domain": domain,
+                    "status": "Unknown",
+                    "ssl_expiration": "Unknown"
+                })
 
-            f.seek(0)
-            json.dump(domains, f, indent=4)
+                f.seek(0)
+                json.dump(domains, f, indent=4)
+                f.truncate()  # Clean file after rewrite
+        except json.JSONDecodeError:
+            flash("Error reading your domain list. Resetting your data.")
+            with open(domains_file, "w") as f:
+                json.dump([], f)
 
         flash(f"Domain '{domain}' added successfully.")
         return redirect(url_for("dashboard.dashboard"))
 
-    with open(domains_file, "r") as f:
-        domains = json.load(f)
+    # GET method: show domains
+    try:
+        with open(domains_file, "r") as f:
+            domains = json.load(f)
+            if not isinstance(domains, list):
+                raise ValueError("Invalid domain data.")
+    except (json.JSONDecodeError, ValueError):
+        flash("Error loading your domains. Resetting your data.")
+        domains = []
+        with open(domains_file, "w") as f:
+            json.dump(domains, f)
 
     return render_template("dashboard.html", username=username, domains=domains)

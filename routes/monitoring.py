@@ -1,6 +1,10 @@
 from flask import Blueprint, session, redirect, url_for, flash
 import json, os
 from services.domain_checker import check_liveness, check_ssl_expiration
+from datetime import datetime
+
+
+
 
 monitoring_bp = Blueprint('monitoring', __name__)
 
@@ -18,16 +22,26 @@ def check_domains():
         flash("No domains to check.")
         return redirect(url_for("dashboard.dashboard"))
 
-    with open(domains_file, "r+") as f:
-        domains = json.load(f)
-        for d in domains:
-            d["status"] = check_liveness(d["domain"])
-            d["ssl_expiration"] = check_ssl_expiration(d["domain"])
-        f.seek(0)
+    # First: Read domains
+    try:
+        with open(domains_file, "r") as f:
+            domains = json.load(f)
+    except (json.JSONDecodeError, FileNotFoundError):
+        domains = []
+
+    # Update each domain
+    for d in domains:
+        d["status"] = check_liveness(d["domain"])
+        d["ssl_expiration"] = check_ssl_expiration(d["domain"])
+        d["last_checked"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    # Now save safely (overwrite clean)
+    with open(domains_file, "w") as f:
         json.dump(domains, f, indent=4)
 
     flash("Domains checked and updated.")
     return redirect(url_for("dashboard.dashboard"))
+
 
 @monitoring_bp.route('/bulk_upload', methods=['GET', 'POST'])
 def bulk_upload():
